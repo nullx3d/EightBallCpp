@@ -13,7 +13,7 @@ $SSCUrl = $EnvSettings['SSC_URL']
 $SSCAuthToken = $EnvSettings['SSC_AUTH_TOKEN'] # CIToken
 $ScanSwitches = "-Dcom.fortify.sca.follow.imports=true"
 $UseMSBuild = $True
-$UseFOD = $False
+$UseFOD = $True
 
 # Test we have Fortify installed successfully
 Test-Environment
@@ -35,13 +35,18 @@ if ($UseMSBuild -eq $True) {
         -verbose CL.exe /c /ZI /nologo /W3 /WX- /diagnostics:column /Od /Oy- /D WIN32 /D _DEBUG `
         /D _CONSOLE /D _UNICODE /D UNICODE /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope `
         /Zc:inline /Yc"stdafx.h" /Fp"Debug\EightBall.pch" /Fo"Debug\\" /Fd"Debug\vc142.pdb" `
+        /external:W3 /Gd /TP /analyze- /FC /errorReport:queue Shell.cpp
+    & sourceanalyzer '-Dcom.fortify.sca.ProjectRoot=.fortify' $ScanSwitches -b "$AppName" `
+        -verbose CL.exe /c /ZI /nologo /W3 /WX- /diagnostics:column /Od /Oy- /D WIN32 /D _DEBUG `
+        /D _CONSOLE /D _UNICODE /D UNICODE /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope `
+        /Zc:inline /Yc"stdafx.h" /Fp"Debug\EightBall.pch" /Fo"Debug\\" /Fd"Debug\vc142.pdb" `
         /external:W3 /Gd /TP /analyze- /FC /errorReport:queue Eightball.cpp
 }
 
 if ($UseFOD -eq $True) {
     Write-Host Creating Mobile Build session
     & sourceanalyzer '-Dcom.fortify.sca.ProjectRoot=.fortify' -b "$AppName" -verbose -export-build-session "$($AppName).mbs"
-    Compress-Archive -Path "$($AppName).mbs" -DestinationPath FoDPackage.zip
+    Compress-Archive -Path "$($AppName).mbs" -Force -DestinationPath FoDPackage.zip
     Write-Host Zip file FoDPackage.zip can now be uploaded to FOD...
 } else {
     Write-Host Running scan...

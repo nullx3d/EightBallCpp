@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EightBall.cpp" />
+    <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -104,8 +105,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="pugiconfig.hpp" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="eightball.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\pugixml.1.12.0\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.12.0\build\native\pugixml.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\pugixml.1.12.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.12.0\build\native\pugixml.targets'))" />
+  </Target>
 </Project>

@@ -33,3 +33,6 @@ hs_err_pid*
 /.vs
 *.filters
 *.user
+*.TMP
+/Debug
+/packages/pugixml.1.12.0
