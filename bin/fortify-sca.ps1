@@ -13,7 +13,7 @@ $SSCUrl = $EnvSettings['SSC_URL']
 $SSCAuthToken = $EnvSettings['SSC_AUTH_TOKEN'] # CIToken
 $ScanSwitches = "-Dcom.fortify.sca.follow.imports=true"
 $UseMSBuild = $True
-$UseFOD = $True
+$UseFOD = $False
 
 # Test we have Fortify installed successfully
 Test-Environment
@@ -51,7 +51,7 @@ if ($UseFOD -eq $True) {
 } else {
     Write-Host Running scan...
     & sourceanalyzer '-Dcom.fortify.sca.ProjectRoot=.fortify' $ScanSwitches -b "$AppName" -verbose `
-   -build-project "$AppName" -build-version "$AppVersion" -build-label "SNAPSHOT" -scan -f "$($AppName).fpr"
+        -build-project "$AppName" -build-version "$AppVersion" -build-label "SNAPSHOT" -scan -f "$($AppName).fpr"
 
     # summarise issue count by analyzer
     & fprutility -information -analyzerIssueCounts -project "$($AppName).fpr"
